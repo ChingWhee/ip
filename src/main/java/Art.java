@@ -27,6 +27,6 @@ public class Art {
 
     public static void printDivider() {
         String divider = "----------------------------------------------------------------------------";
-        System.out.print(divider);
+        System.out.println(divider);
     }
 }
