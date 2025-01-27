@@ -18,8 +18,4 @@ public class Task {
     public void setStatus(Boolean isDone) {
         this.isDone = isDone;
     }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }
