@@ -1,3 +1,5 @@
+package art;
+
 // Class to store all ascii art
 public class Art {
     public static void printGalaxy() {

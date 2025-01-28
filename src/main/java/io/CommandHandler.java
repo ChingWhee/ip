@@ -1,7 +1,9 @@
-public class Controller {
-    public static Task[] tasks = new Task[100];
-    public static int tasksCount = 0;
+package io;
 
+import task.TaskManager;
+import art.Art;
+
+public class CommandHandler {
     public static void printGreetings(String name) {
         System.out.println("Welcome to the Galaxy of " + name + "!");
         Art.printGalaxy();
@@ -25,30 +27,23 @@ public class Controller {
     public static void printTaskList() {
         // List all tasks
         System.out.println("Here are the tasks in your list:");
-        for (int i = 0; i < tasksCount; i++) {
-            System.out.println((i + 1) + ".[" + tasks[i].getStatusIcon() + "] " + tasks[i].getDescription());
-        }
+        TaskManager.printTasks();
     }
 
     public static void printChangeStatus(String markStatus, String taskNum) {
         try {
-            int number = Integer.parseInt(taskNum); // Try to parse the string into an integer
-            if (number > tasksCount) { // Check if number is more than number of tasks
+            int index = Integer.parseInt(taskNum); // Try to parse the string into an integer
+            int tasksCount = TaskManager.getTasksCount();
+            if (index > tasksCount) { // Check if index is more than index of tasks
                 System.out.println("You currently only have " + tasksCount + " tasks.");
-            } else if (number > 0) {
+            } else if (index > 0) {
                 if (markStatus.equalsIgnoreCase("mark")) { // Mark as done
-                    System.out.println("Nice! I've marked this task as done:");
-                    tasks[number - 1].setStatus(true);
-                    System.out.println("\t[" + tasks[number - 1].getStatusIcon() + "] "
-                            + tasks[number - 1].getDescription());
+                    TaskManager.changeTaskStatus(true, index);
                 } else if (markStatus.equalsIgnoreCase("unmark")) { // Mark as not done
-                    System.out.println("OK, I've marked this task as not done yet:");
-                    tasks[number - 1].setStatus(false);
-                    System.out.println("\t[" + tasks[number - 1].getStatusIcon() + "] "
-                            + tasks[number - 1].getDescription());
+                    TaskManager.changeTaskStatus(false, index);
                 }
             } else { // Input is less than or equal to 0
-                System.out.println("Negative integer! Please enter a positive number!");
+                System.out.println("Negative integer! Please enter a positive index!");
             }
         } catch (NumberFormatException e) { // Input is not an integer
             System.out.println("Invalid number! Please enter a positive integer.");
@@ -58,7 +53,6 @@ public class Controller {
     public static void printEcho(String line) {
         // Echo user input
         System.out.println("added: " + line);
-        tasks[tasksCount] = new Task(line);
-        tasksCount++;
+        TaskManager.addTask(line);
     }
 }
