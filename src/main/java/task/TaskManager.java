@@ -30,6 +30,7 @@ public class TaskManager {
             System.out.println("No tasks yet! Start adding some tasks");
             return;
         }
+        System.out.println("Here are the tasks in your list:");
         for (int i = 0; i < tasksCount; i++) {
             if (tasks[i] != null) {
                 System.out.println((i + 1) + "." + tasks[i].toString());

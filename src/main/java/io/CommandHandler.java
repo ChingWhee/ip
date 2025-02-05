@@ -9,7 +9,7 @@ public class CommandHandler {
     // Print greeting message when program is executed
     public static void printGreetings(String name) {
         System.out.println("Welcome to the Galaxy of " + name + "!");
-        Art.printGalaxy();
+//        Art.printGalaxy();
         System.out.println("How may I help you?");
         Art.printDivider();
     }
@@ -32,7 +32,6 @@ public class CommandHandler {
     // Handle "list" command
     public static void printTaskList() {
         // List all tasks
-        System.out.println("Here are the tasks in your list:");
         TaskManager.printTasks();
     }
 
