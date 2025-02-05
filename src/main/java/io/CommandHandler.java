@@ -3,7 +3,10 @@ package io;
 import task.TaskManager;
 import art.Art;
 
+import java.util.MissingFormatArgumentException;
+
 public class CommandHandler {
+    // Print greeting message when program is executed
     public static void printGreetings(String name) {
         System.out.println("Welcome to the Galaxy of " + name + "!");
         Art.printGalaxy();
@@ -11,11 +14,13 @@ public class CommandHandler {
         Art.printDivider();
     }
 
+    // Print goodbye message when user input "bye"
     public static void printBye() {
         System.out.println("Goodbye! See you soon!");
         Art.printDivider();
     }
 
+    // Handle empty input
     public static void printEmptyInput() {
         // If user did not type any text, let them know
         System.out.print("""
@@ -24,12 +29,14 @@ public class CommandHandler {
             """);
     }
 
+    // Handle "list" command
     public static void printTaskList() {
         // List all tasks
         System.out.println("Here are the tasks in your list:");
         TaskManager.printTasks();
     }
 
+    // Handle "mark" or "unmark" command
     public static void printChangeStatus(String markStatus, String taskNum) {
         try {
             int index = Integer.parseInt(taskNum); // Try to parse the string into an integer
@@ -46,13 +53,34 @@ public class CommandHandler {
                 System.out.println("Negative integer! Please enter a positive index!");
             }
         } catch (NumberFormatException e) { // Input is not an integer
-            System.out.println("Invalid number! Please enter a positive integer.");
+            System.out.println("Invalid index! Please enter a positive integer.");
         }
     }
 
+    // Echo user input
     public static void printEcho(String line) {
-        // Echo user input
-        System.out.println("added: " + line);
-        TaskManager.addTask(line);
+        System.out.println(line);
+
+    }
+
+    // Handle "todo", "deadline" or "event" command
+    public static void addTask(String line) {
+        // 0 is command and 1 is task
+        String[] words = line.split(" ", 2);
+        try {
+            if (words[0].equalsIgnoreCase("todo")) {
+                TaskManager.addTodo(words[1]);
+            } else if (words[0].equalsIgnoreCase("deadline")) {
+                TaskManager.addDeadline(words[1]);
+            } else if (words[0].equalsIgnoreCase("event")) {
+                TaskManager.addEvent(words[1]);
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        System.out.println("Got it, I have added this task:");
+        System.out.println("\t" +  TaskManager.getLatestTask());
+        System.out.println("Now you have " + TaskManager.getTasksCount() + " tasks.");
     }
 }

@@ -1,5 +1,7 @@
 package task;
 
+import java.util.MissingFormatArgumentException;
+
 public class TaskManager {
     public static Task[] tasks = new Task[100];
     public static int tasksCount = 0;
@@ -24,14 +26,54 @@ public class TaskManager {
     }
 
     public static void printTasks() {
+        if (tasksCount == 0) {
+            System.out.println("No tasks yet! Start adding some tasks");
+            return;
+        }
         for (int i = 0; i < tasksCount; i++) {
             if (tasks[i] != null) {
-                System.out.println((i + 1) + ".[" + tasks[i].getStatusIcon() + "] " + tasks[i].getDescription());
+                System.out.println((i + 1) + "." + tasks[i].toString());
             }
         }
     }
 
     public static int getTasksCount() {
         return tasksCount;
+    }
+
+    public static String getLatestTask() {
+        return tasks[tasksCount - 1].toString();
+    }
+
+    public static void addTodo(String description) {
+        tasks[tasksCount] = new Todo(description);
+        tasksCount++;
+    }
+
+    public static void addDeadline(String task) {
+        if (!task.contains(" /by ")) {
+            throw new IllegalArgumentException("Invalid deadline format! Use: deadline <description> /by <time>");
+        }
+        String[] deadlineParts = task.split(" /by ", 2);
+        tasks[tasksCount] = new Deadline(deadlineParts[0], deadlineParts[1]);
+        tasksCount++;
+    }
+
+    public static void addEvent(String task) {
+        int fromIndex = task.indexOf(" /from ");
+        int toIndex = task.indexOf(" /to ");
+        if (fromIndex == -1 || toIndex == -1) {
+            throw new IllegalArgumentException("Invalid event format! Use: event <description> /from <start> /to <end>");
+        }
+        if (fromIndex > toIndex) {
+            throw new IllegalArgumentException("Invalid order! Ensure /from comes before /to.");
+        }
+
+        String[] eventParts = task.split(" /from | /to ", 3);
+        if (eventParts[1].contains("/to") || eventParts[2].contains("/from")) {
+            throw new IllegalArgumentException("Invalid order! Ensure /from comes before /to.");
+        }
+        tasks[tasksCount] = new Event(eventParts[0], eventParts[1], eventParts[2]);
+        tasksCount++;
     }
 }
