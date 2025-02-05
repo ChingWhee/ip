@@ -22,7 +22,6 @@ public class CommandHandler {
 
     // Handle empty input
     public static void printEmptyInput() {
-        // If user did not type any text, let them know
         System.out.print("""
             Hmm, I can't store invisible thoughts.
             Try typing something!
@@ -31,7 +30,6 @@ public class CommandHandler {
 
     // Handle "list" command
     public static void printTaskList() {
-        // List all tasks
         TaskManager.printTasks();
     }
 

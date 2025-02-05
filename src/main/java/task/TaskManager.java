@@ -1,15 +1,8 @@
 package task;
 
-import java.util.MissingFormatArgumentException;
-
 public class TaskManager {
     public static Task[] tasks = new Task[100];
     public static int tasksCount = 0;
-
-    public static void addTask(String name) {
-        tasks[tasksCount] = new Task(name);
-        tasksCount++;
-    }
 
     public static void changeTaskStatus(Boolean status, int index) {
         if (status) {
