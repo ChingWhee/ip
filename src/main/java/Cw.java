@@ -9,20 +9,26 @@ public class Cw {
         Scanner in = new Scanner(System.in);
         CommandHandler.printGreetings(name);
 
-        String line = in.nextLine().trim();
-        String[] words = line.split(" ");
-        Art.printDivider();
+        String line;
+        String[] words;
+
         // While the program has not ended
-        while (!line.equalsIgnoreCase("bye")) {
+        do {
+            line = in.nextLine().trim();
+            words = line.split(" ");
+            Art.printDivider();
+
+            if (line.isBlank()) {
+                CommandHandler.printEmptyInput();
+            }
+
             boolean isMarkCommand = (words[0].equalsIgnoreCase("mark"))
                     || (words[0].equalsIgnoreCase("unmark"));
             boolean isTaskCommand = words[0].equalsIgnoreCase("todo")
                     || words[0].equalsIgnoreCase("deadline")
                     || words[0].equalsIgnoreCase("event");
 
-            if (line.isBlank()) {
-                CommandHandler.printEmptyInput();
-            } else if (line.equalsIgnoreCase("list")) { // Command: "list"
+            if (line.equalsIgnoreCase("list")) { // Command: "list"
                 CommandHandler.printTaskList();
             } else if (words.length == 2 && isMarkCommand) { // Command: "mark <int>" or "unmark <int>"
                 CommandHandler.printChangeStatus(words[0], words[1]);
@@ -32,10 +38,7 @@ public class Cw {
                 CommandHandler.printEcho(line);
             }
             Art.printDivider();
-            line = in.nextLine().trim();
-            words = line.split(" ");
-            Art.printDivider();
-        }
+        } while (!line.equalsIgnoreCase("bye"));
         CommandHandler.printBye();
     }
 }

@@ -4,8 +4,8 @@ public class TaskManager {
     public static Task[] tasks = new Task[100];
     public static int tasksCount = 0;
 
-    public static void changeTaskStatus(Boolean status, int index) {
-        if (status) {
+    public static void changeTaskStatus(Boolean isDone, int index) {
+        if (isDone) {
             System.out.println("Nice! I've marked this task as done:");
             tasks[index - 1].setStatus(true);
             System.out.println("\t[" + tasks[index - 1].getStatusIcon() + "] "

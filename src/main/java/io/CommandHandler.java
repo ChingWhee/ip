@@ -24,8 +24,8 @@ public class CommandHandler {
     public static void printEmptyInput() {
         System.out.print("""
             Hmm, I can't store invisible thoughts.
-            Try typing something!
-            """);
+            Try typing something!"""
+        );
     }
 
     // Handle "list" command
@@ -65,12 +65,14 @@ public class CommandHandler {
         // 0 is command and 1 is task
         String[] words = line.split(" ", 2);
         try {
-            if (words[0].equalsIgnoreCase("todo")) {
-                TaskManager.addTodo(words[1]);
-            } else if (words[0].equalsIgnoreCase("deadline")) {
-                TaskManager.addDeadline(words[1]);
-            } else if (words[0].equalsIgnoreCase("event")) {
-                TaskManager.addEvent(words[1]);
+            String command = words[0].toUpperCase();
+            switch (command) {
+            case "TODO": TaskManager.addTodo(words[1]);
+                break;
+            case "DEADLINE": TaskManager.addDeadline(words[1]);
+                break;
+            case "EVENT": TaskManager.addEvent(words[1]);
+                break;
             }
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
