@@ -18,8 +18,12 @@ public class Cw {
             words = line.split(" ");
             Art.printDivider();
 
-            if (line.isBlank()) {
+            // Guard clauses
+            if (line.equalsIgnoreCase("bye")) {
+                break;
+            } else if (line.isBlank()) {
                 CommandHandler.printEmptyInput();
+                continue;
             }
 
             boolean isMarkCommand = (words[0].equalsIgnoreCase("mark"))
@@ -39,6 +43,7 @@ public class Cw {
             }
             Art.printDivider();
         } while (!line.equalsIgnoreCase("bye"));
+
         CommandHandler.printBye();
     }
 }

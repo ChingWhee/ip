@@ -24,7 +24,8 @@ public class CommandHandler {
     public static void printEmptyInput() {
         System.out.print("""
             Hmm, I can't store invisible thoughts.
-            Try typing something!"""
+            Try typing something!
+            """
         );
     }
 
