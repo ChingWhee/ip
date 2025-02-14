@@ -1,5 +1,6 @@
 package io;
 
+import exception.TaskException;
 import task.TaskManager;
 import art.Art;
 
@@ -62,9 +63,13 @@ public class CommandHandler {
     }
 
     // Handle "todo", "deadline" or "event" command
-    public static void addTask(String line) {
+    public static void addTask(String line) throws MissingFormatArgumentException, TaskException {
         // 0 is command and 1 is task
         String[] words = line.split(" ", 2);
+        if (words.length < 2) {
+            throw new TaskException();
+        }
+
         try {
             String command = words[0].toUpperCase();
             switch (command) {

@@ -1,6 +1,9 @@
 import art.Art;
+import exception.TaskException;
 import io.CommandHandler;
 
+import java.io.Serial;
+import java.util.MissingFormatArgumentException;
 import java.util.Scanner;
 
 public class Cw {
@@ -36,10 +39,14 @@ public class Cw {
                 CommandHandler.printTaskList();
             } else if (words.length == 2 && isMarkCommand) { // Command: "mark <int>" or "unmark <int>"
                 CommandHandler.printChangeStatus(words[0], words[1]);
-            } else if (words.length >= 2 && isTaskCommand) { // Command: "todo" or "deadline" or "event"
-                CommandHandler.addTask(line);
+            } else if (isTaskCommand) { // Command: "todo" or "deadline" or "event"
+                try {
+                    CommandHandler.addTask(line);
+                } catch (TaskException e) {
+                    System.out.println("Missing task name");
+                }
             } else {
-                CommandHandler.printEcho(line);
+                System.out.println("Sorry, I don't understand what this means");
             }
             Art.printDivider();
         } while (!line.equalsIgnoreCase("bye"));
