@@ -27,7 +27,7 @@ public class Cw {
             } else if (line.isBlank()) {
                 CommandHandler.printEmptyInput();
                 continue;
-            }
+            }     
 
             boolean isMarkCommand = (words[0].equalsIgnoreCase("mark"))
                     || (words[0].equalsIgnoreCase("unmark"));
