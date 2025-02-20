@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 public class TaskManager {
     public static ArrayList<Task> tasks = new ArrayList<>();
-    public static int tasksCount = 0;
 
     public static void changeTaskStatus(Boolean isDone, int index) {
         if (isDone) {
@@ -74,5 +73,35 @@ public class TaskManager {
         System.out.println("\t" + tasks.get(index - 1).toString());
         tasks.remove(index - 1);
         System.out.println("Now you have " + TaskManager.getTasksCount() + " tasks.");
+    }
+
+    public static void parseTask(String line) throws TaskException {
+        String[] parts = line.split(" \\| ");
+        if (parts.length < 3) {
+            throw new IllegalArgumentException("Corrupted line format.");
+        }
+
+        String taskType = parts[0].trim().toUpperCase();
+        boolean isDone = parts[1].trim().equals("1");
+        String description = parts[2].trim();
+
+        switch (taskType) {
+        case "T": // Todo
+            tasks.add(new Todo(description, isDone));
+            break;
+        case "D": // Deadline
+            if (parts.length < 4) throw new TaskException("Wrong deadline format.");
+            String by = parts[3].trim();
+            tasks.add(new Deadline(description, isDone, by));
+            break;
+        case "E": // Event
+            if (parts.length < 5) throw new TaskException("Wrong event format.");
+            String from = parts[3].trim();
+            String to = parts[4].trim();
+            tasks.add(new Event(description, isDone, from, to));
+            break;
+        default:
+            throw new TaskException("Unknown task type.");
+        }
     }
 }
