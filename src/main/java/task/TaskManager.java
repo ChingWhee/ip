@@ -1,5 +1,7 @@
 package task;
 
+import exception.TaskException;
+
 public class TaskManager {
     public static Task[] tasks = new Task[100];
     public static int tasksCount = 0;
@@ -44,28 +46,28 @@ public class TaskManager {
         tasksCount++;
     }
 
-    public static void addDeadline(String task) {
+    public static void addDeadline(String task) throws TaskException {
         if (!task.contains(" /by ")) {
-            throw new IllegalArgumentException("Invalid deadline format! Use: deadline <description> /by <time>");
+            throw new TaskException("Invalid deadline format! Use: deadline <description> /by <time>");
         }
         String[] deadlineParts = task.split(" /by ", 2);
         tasks[tasksCount] = new Deadline(deadlineParts[0], deadlineParts[1]);
         tasksCount++;
     }
 
-    public static void addEvent(String task) {
+    public static void addEvent(String task) throws TaskException {
         int fromIndex = task.indexOf(" /from ");
         int toIndex = task.indexOf(" /to ");
         if (fromIndex == -1 || toIndex == -1) {
-            throw new IllegalArgumentException("Invalid event format! Use: event <description> /from <start> /to <end>");
+            throw new TaskException("Invalid event format! Use: event <description> /from <start> /to <end>");
         }
         if (fromIndex > toIndex) {
-            throw new IllegalArgumentException("Invalid order! Ensure /from comes before /to.");
+            throw new TaskException("Invalid order! Ensure /from comes before /to.");
         }
 
         String[] eventParts = task.split(" /from | /to ", 3);
         if (eventParts[1].contains("/to") || eventParts[2].contains("/from")) {
-            throw new IllegalArgumentException("Invalid order! Ensure /from comes before /to.");
+            throw new TaskException("Invalid order! Ensure /from comes before /to.");
         }
         tasks[tasksCount] = new Event(eventParts[0], eventParts[1], eventParts[2]);
         tasksCount++;
