@@ -69,5 +69,10 @@ public class TaskManager {
         tasks.add(new Event(eventParts[0], eventParts[1], eventParts[2]));
     }
 
+    public static void deleteTask(int index) {
+        System.out.println("Alright, I have deleted this task!");
+        System.out.println("\t" + tasks.get(index - 1).toString());
+        tasks.remove(index - 1);
+        System.out.println("Now you have " + TaskManager.getTasksCount() + " tasks.");
     }
 }

@@ -37,9 +37,9 @@ public class CommandHandler {
     private static void throwInvalidMarkCommand(String markStatus) throws MarkException {
         switch (markStatus) {
         case "MARK":
-            throw new MarkException("Invalid command! Use: mark <int>");
+            throw new MarkException("Invalid mark command! Use: mark <int>");
         case "UNMARK":
-            throw new MarkException("Invalid command! Use: unmark <int>");
+            throw new MarkException("Invalid unmark command! Use: unmark <int>");
         }
     }
     // Handle "mark" or "unmark" command
@@ -72,13 +72,6 @@ public class CommandHandler {
         } else { // Input is less than or equal to 0
             throw new MarkException("Negative integer! Please enter a positive integer!");
         }
-
-    }
-
-    // Echo user input
-    public static void printEcho(String line) {
-        System.out.println(line);
-
     }
 
     // Handle "todo", "deadline" or "event" command
@@ -105,5 +98,31 @@ public class CommandHandler {
         System.out.println("Got it, I have added this task:");
         System.out.println("\t" +  TaskManager.getLatestTask());
         System.out.println("Now you have " + TaskManager.getTasksCount() + " tasks.");
+    }
+
+    // Delete tasks
+    public static void deleteTask(String line) throws TaskException {
+        String[] words = line.split(" ");
+        if (words.length != 2) {
+            throw new TaskException("Invalid delete command! Use: delete <int>");
+        }
+
+        String taskNum = words[1];
+        int index = 0;
+        try { // Check if the second word can be parsed as an int
+            index = Integer.parseInt(taskNum);
+        } catch (NumberFormatException e) { // Input is not an integer
+            throw new TaskException("Second parameter must be an integer! Use: delete <int>");
+        }
+
+        // Try to parse the string into an integer
+        int tasksCount = TaskManager.getTasksCount();
+        if (index > tasksCount) { // Check if index is more than index of tasks
+            throw new TaskException("You currently only have " + tasksCount + " tasks.");
+        } else if (index > 0) {
+            TaskManager.deleteTask(index);
+        } else { // Input is less than or equal to 0
+            throw new TaskException("Negative integer! Please enter a positive integer!");
+        }
     }
 }
