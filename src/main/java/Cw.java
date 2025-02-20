@@ -1,15 +1,27 @@
 import art.Art;
 import exception.*;
 import io.CommandHandler;
-
+import java.io.IOException;
 import java.util.Scanner;
+
+import storage.Storage;
+import task.TaskManager;
 
 public class Cw {
     public static void main(String[] args) {
         String name = "Cw";
-        Scanner in = new Scanner(System.in);
         CommandHandler.printGreetings(name);
 
+        // Read existing files from storage file
+        Storage fileStorage;
+        try {
+            fileStorage = new Storage();
+        } catch (IOException e) {
+            System.out.println("Cannot read and make file! Aborting!");
+            return;
+        }
+
+        Scanner in = new Scanner(System.in);
         String line;
         String[] words;
 
@@ -38,12 +50,14 @@ public class Cw {
             } else if (isMarkCommand) { // Command: "mark <int>" or "unmark <int>"
                 try {
                     CommandHandler.changeStatus(line);
+                    fileStorage.saveTasks(TaskManager.tasks);
                 } catch (MarkException e) {
                     System.out.println(e.getMessage());
                 }
             } else if (isTaskCommand) { // Command: "todo" or "deadline" or "event"
                 try {
                     CommandHandler.addTask(line);
+                    fileStorage.saveTasks(TaskManager.tasks);
                 } catch (TaskException e) {
                     System.out.println(e.getMessage());
                 }
@@ -53,7 +67,6 @@ public class Cw {
 
             Art.printDivider();
         } while (!line.equalsIgnoreCase("bye"));
-
         CommandHandler.printBye();
     }
 }
