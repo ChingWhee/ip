@@ -21,6 +21,10 @@ event meeting /to 4pm /from 2pm
 event meeting /from  /to  
 event meeting /from 6pm /to 4pm  
 event project meeting /from Mon 2pm /to 4pm
+list
+delete 3
+delete 100
+list
 mark 3
 list
 bye

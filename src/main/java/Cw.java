@@ -32,6 +32,7 @@ public class Cw {
             boolean isTaskCommand = words[0].equalsIgnoreCase("todo")
                     || words[0].equalsIgnoreCase("deadline")
                     || words[0].equalsIgnoreCase("event");
+            boolean isDelete = words[0].equalsIgnoreCase("delete");
 
             if (line.equalsIgnoreCase("list")) { // Command: "list"
                 CommandHandler.printTaskList();
@@ -44,6 +45,12 @@ public class Cw {
             } else if (isTaskCommand) { // Command: "todo" or "deadline" or "event"
                 try {
                     CommandHandler.addTask(line);
+                } catch (TaskException e) {
+                    System.out.println(e.getMessage());
+                }
+            } else if (isDelete) {
+                try {
+                    CommandHandler.deleteTask(line);
                 } catch (TaskException e) {
                     System.out.println(e.getMessage());
                 }
