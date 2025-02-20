@@ -1,12 +1,25 @@
 list
-hello world
+mark
+unmark
+mark aaa
+unmark aaa
 todo borrow book
 deadline return book /by Sunday
 mark 1
 mark 3
-
 list
 unmark 1
+unmark 3
+todo  
+todo ""  
+deadline return book  
+deadline return book /by 5pm
+event meeting  
+event meeting /from 2pm  
+event meeting /to 4pm  
+event meeting /to 4pm /from 2pm  
+event meeting /from  /to  
+event meeting /from 6pm /to 4pm  
 event project meeting /from Mon 2pm /to 4pm
 mark 3
 list
