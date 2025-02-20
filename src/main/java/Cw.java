@@ -65,6 +65,7 @@ public class Cw {
             } else if (isDelete) {
                 try {
                     CommandHandler.deleteTask(line);
+                    fileStorage.saveTasks(TaskManager.tasks);
                 } catch (TaskException e) {
                     System.out.println(e.getMessage());
                 }
