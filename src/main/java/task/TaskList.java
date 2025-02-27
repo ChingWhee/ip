@@ -2,7 +2,10 @@ package task;
 
 import storage.Storage;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TaskList {
     public ArrayList<Task> tasks = new ArrayList<>();
@@ -39,4 +42,42 @@ public class TaskList {
         tasks.remove(index);
     }
 
+    public List<Task> findTasksBeforeDate(LocalDate date) {
+        return tasks.stream()
+                .filter(task -> {
+                    if (task instanceof Deadline) {
+                        return ((Deadline) task).by.toLocalDate().isBefore(date);
+                    } else if (task instanceof Event) {
+                        return ((Event) task).from.toLocalDate().isBefore(date);
+                    }
+                    return false;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<Task> findTasksAfterDate(LocalDate date) {
+        return tasks.stream()
+                .filter(task -> {
+                    if (task instanceof Deadline) {
+                        return ((Deadline) task).by.toLocalDate().isAfter(date);
+                    } else if (task instanceof Event) {
+                        return ((Event) task).from.toLocalDate().isAfter(date);
+                    }
+                    return false;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public List<Task> findTasksOnDate(LocalDate date) {
+        return tasks.stream()
+                .filter(task -> {
+                    if (task instanceof Deadline) {
+                        return ((Deadline) task).by.toLocalDate().equals(date);
+                    } else if (task instanceof Event) {
+                        return ((Event) task).from.toLocalDate().equals(date);
+                    }
+                    return false;
+                })
+                .collect(Collectors.toList());
+    }
 }
