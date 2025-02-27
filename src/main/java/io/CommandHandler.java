@@ -9,6 +9,9 @@ import task.TaskManager;
 import task.TaskList;
 import ui.Ui;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 public class CommandHandler {
@@ -39,6 +42,7 @@ public class CommandHandler {
         boolean isTaskCommand = action.equals("TODO") || action.equals("DEADLINE") || action.equals("EVENT");
         boolean isDelete = action.equals("DELETE");
         boolean isFind = action.equals("FIND");
+        boolean isCheck = action.equals("BEFORE") || action.equals("ON") || action.equals("AFTER");
 
         if (command.equalsIgnoreCase("list")) { // Command: "list"
             printTaskList();
@@ -69,7 +73,12 @@ public class CommandHandler {
             } catch (TaskException e) {
                 System.out.println(e.getMessage());
             }
-
+        } else if (isCheck) {
+            try {
+                checkDates(command);
+            } catch (TaskException e) {
+                System.out.println(e.getMessage());
+            }
         } else {
             System.out.println("Sorry, I don't understand what this means");
         }
@@ -156,7 +165,7 @@ public class CommandHandler {
         }
 
         String taskNum = words[1];
-        int index = 0;
+        int index;
         try { // Check if the second word can be parsed as an int
             index = Integer.parseInt(taskNum);
         } catch (NumberFormatException e) { // Input is not an integer
@@ -191,6 +200,29 @@ public class CommandHandler {
                     System.out.println("\t" + (i + 1) + "." + taskList.getTask(i));
                 }
             }
+    // Check tasks with dates before, on, or after the requested date
+    public void checkDates(String line) throws TaskException {
+        String[] words = line.split(" ");
+        String action = words[0].toLowerCase();
+        if (words.length != 2) {
+            throw new TaskException("Invalid date format! Use: dd/MM/yyyy (e.g., 15/10/2025).");
+        }
+
+        DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        try {
+            LocalDate date = LocalDate.parse(words[1], DATE_FORMAT);
+            List<Task> results = (action.equals("before")) ? taskList.findTasksBeforeDate(date) :
+                    (action.equals("after")) ? taskList.findTasksAfterDate(date) :
+                            taskList.findTasksOnDate(date);
+
+            if (results.isEmpty()) {
+                System.out.println("No tasks found to be done " + action + " " + words[1]);
+            } else {
+                System.out.println("Tasks " + action + " " + words[1] + ":");
+                results.forEach(System.out::println);
+            }
+        } catch (DateTimeParseException e) {
+            throw new TaskException("Invalid date format! Use: dd/MM/yyyy (e.g., 15/10/2025).");
         }
     }
 }
