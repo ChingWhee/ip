@@ -1,8 +1,11 @@
 package task;
 
 import exception.TaskException;
+
+import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Manages tasks in the application by adding, updating, and removing tasks.
@@ -153,5 +156,45 @@ public class TaskManager {
      */
     public ArrayList<Task> getTaskList() {
         return taskList.tasks;
+    }
+
+    /**
+     * Finds tasks that contain all the specified keywords.
+     *
+     * @param keywords A string containing keywords separated by spaces.
+     * @return A list of tasks that contain all keywords.
+     */
+    public List<Task> findTasksByKeywords(String keywords) {
+        return taskList.findTasksByKeywords(keywords);
+    }
+
+    /**
+     * Finds tasks that have deadlines or event start times before a given date.
+     *
+     * @param date The date to compare against.
+     * @return A list of tasks that occur before the specified date.
+     */
+    public List<Task> findTasksBeforeDate(LocalDate date) {
+        return taskList.findTasksBeforeDate(date);
+    }
+
+    /**
+     * Finds tasks that have deadlines or event start times after a given date.
+     *
+     * @param date The date to compare against.
+     * @return A list of tasks that occur after the specified date.
+     */
+    public List<Task> findTasksAfterDate(LocalDate date) {
+        return taskList.findTasksAfterDate(date);
+    }
+
+    /**
+     * Finds tasks that have deadlines or event start times on a specific date.
+     *
+     * @param date The date to compare against.
+     * @return A list of tasks that occur on the specified date.
+     */
+    public List<Task> findTasksOnDate(LocalDate date) {
+        return taskList.findTasksOnDate(date);
     }
 }

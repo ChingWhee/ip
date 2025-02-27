@@ -88,17 +88,30 @@ public class TaskList {
         tasks.remove(index);
     }
 
+    /**
+     * Finds tasks that contain all the specified keywords in their description.
+     *
+     * @param keywords A string containing keywords separated by spaces.
+     * @return A list of tasks that contain all keywords.
+     */
     public List<Task> findTasksByKeywords(String keywords) {
         // Split input into individual words and check for task with all matching keywords
         String[] keywordList = keywords.toLowerCase().split(" ");
 
         return tasks.stream()
-            .filter(task -> {
-                String description = task.getDescription().toLowerCase();
-                return Arrays.stream(keywordList).allMatch(description::contains);
-            })
-            .collect(Collectors.toList());
-      
+                .filter(task -> {
+                    String description = task.getDescription().toLowerCase();
+                    return Arrays.stream(keywordList).allMatch(description::contains);
+                })
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Finds tasks that have deadlines or event start times before a given date.
+     *
+     * @param date The date to compare against.
+     * @return A list of tasks that occur before the specified date.
+     */
     public List<Task> findTasksBeforeDate(LocalDate date) {
         return tasks.stream()
                 .filter(task -> {
@@ -112,6 +125,12 @@ public class TaskList {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Finds tasks that have deadlines or event start times after a given date.
+     *
+     * @param date The date to compare against.
+     * @return A list of tasks that occur after the specified date.
+     */
     public List<Task> findTasksAfterDate(LocalDate date) {
         return tasks.stream()
                 .filter(task -> {
@@ -125,6 +144,12 @@ public class TaskList {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Finds tasks that have deadlines or event start times on a specific date.
+     *
+     * @param date The date to compare against.
+     * @return A list of tasks that occur on the specified date.
+     */
     public List<Task> findTasksOnDate(LocalDate date) {
         return tasks.stream()
                 .filter(task -> {

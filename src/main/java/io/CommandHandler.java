@@ -6,7 +6,6 @@ import exception.TaskException;
 import storage.Storage;
 import task.Task;
 import task.TaskManager;
-import task.TaskList;
 import ui.Ui;
 
 import java.time.LocalDate;
@@ -14,17 +13,32 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
+/**
+ * Handles user commands by processing command line input and executing corresponding task operations.
+ * This class interacts with {@link TaskManager} and {@link Storage} to manage tasks.
+ */
 public class CommandHandler {
     private TaskManager taskManager;
     private Storage fileStorage;
-    private TaskList taskList;
 
-    public CommandHandler(TaskManager taskManager, Storage fileStorage, TaskList taskList) throws TaskException {
+    /**
+     * Constructs a CommandHandler instance to process user commands.
+     *
+     * @param taskManager The TaskManager instance for managing tasks.
+     * @param fileStorage The Storage instance for saving and loading tasks.
+     * @throws TaskException If an error occurs during initialization.
+     */
+    public CommandHandler(TaskManager taskManager, Storage fileStorage) throws TaskException {
         this.taskManager = taskManager;
         this.fileStorage = fileStorage;
-        this.taskList = taskList;
     }
 
+    /**
+     * Processes user input and executes the corresponding command.
+     *
+     * @param command The user input command.
+     * @throws ExitException If the "bye" command is entered, causing the program to exit.
+     */
     public void processCommand(String command) throws ExitException {
         String[] words = command.split(" ");
         Ui.printDivider();
@@ -86,11 +100,19 @@ public class CommandHandler {
         Ui.printDivider();
     }
 
-    // Handle "list" command
+    /**
+     * Prints the current task list.
+     */
     public void printTaskList() {
         taskManager.printTasks();
     }
 
+    /**
+     * Throws an exception if a "mark" or "unmark" command is invalid.
+     *
+     * @param markStatus The type of mark command ("MARK" or "UNMARK").
+     * @throws MarkException If the command is invalid.
+     */
     private void throwInvalidMarkCommand(String markStatus) throws MarkException {
         switch (markStatus) {
         case "MARK":
@@ -99,7 +121,13 @@ public class CommandHandler {
             throw new MarkException("Invalid unmark command! Use: unmark <int>");
         }
     }
-    // Handle "mark" or "unmark" command
+
+    /**
+     * Changes the completion status of a task.
+     *
+     * @param line The command input specifying the task to mark or unmark.
+     * @throws MarkException If the input format is invalid.
+     */
     public void changeStatus(String line) throws MarkException {
         String[] words = line.split(" ");
         String markStatus = words[0].toUpperCase();
@@ -131,7 +159,12 @@ public class CommandHandler {
         }
     }
 
-    // Handle "todo", "deadline" or "event" command
+    /**
+     * Adds a new task based on user input (todo, deadline or event)
+     *
+     * @param line The command input specifying the task type and description.
+     * @throws TaskException If the input format is invalid.
+     */
     public void addTask(String line) throws TaskException {
         // words[0] is command and words[1] is task
         String[] words = line.split(" ", 2);
@@ -157,7 +190,12 @@ public class CommandHandler {
         System.out.println("Now you have " + taskManager.getTasksCount() + " tasks.");
     }
 
-    // Delete tasks
+    /**
+     * Deletes a task from the task list.
+     *
+     * @param line The command input specifying the task index to delete.
+     * @throws TaskException If the input format is invalid or the index is out of range.
+     */
     public void deleteTask(String line) throws TaskException {
         String[] words = line.split(" ");
         if (words.length != 2) {
@@ -183,24 +221,37 @@ public class CommandHandler {
         }
     }
 
-    // Find tasks
+    /**
+     * Finds tasks that match the provided keywords.
+     *
+     * @param line The command input specifying the search keywords.
+     * @throws TaskException If the input format is invalid.
+     */
     public void findTasks(String line) throws TaskException {
         String[] words = line.split(" ", 2);
         if (words.length != 2) {
             throw new TaskException("Invalid find command! Use: find <keywords>");
         }
 
-        List<Task> results = taskList.findTasksByKeywords(words[1]);
+        List<Task> results = taskManager.findTasksByKeywords(words[1]);
         if (results.isEmpty()) {
             System.out.println("There are no matching tasks with the keyword " + "\"" + words[1] + "\"");
         } else {
             System.out.println("Here are the matching tasks in your list:");
-            for (int i = 0; i < taskList.size(); i++) {
-                if (taskList.getTask(i) != null) {
-                    System.out.println("\t" + (i + 1) + "." + taskList.getTask(i));
+            for (int i = 0; i < results.size(); i++) {
+                if (results.get(i) != null) {
+                    System.out.println("\t" + (i + 1) + "." + results.get(i));
                 }
             }
-    // Check tasks with dates before, on, or after the requested date
+        }
+    }
+
+    /**
+     * Finds tasks occurring before, on, or after a specific date.
+     *
+     * @param line The command input specifying the date criteria.
+     * @throws TaskException If the input format is invalid.
+     */
     public void checkDates(String line) throws TaskException {
         String[] words = line.split(" ");
         String action = words[0].toLowerCase();
@@ -211,15 +262,19 @@ public class CommandHandler {
         DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         try {
             LocalDate date = LocalDate.parse(words[1], DATE_FORMAT);
-            List<Task> results = (action.equals("before")) ? taskList.findTasksBeforeDate(date) :
-                    (action.equals("after")) ? taskList.findTasksAfterDate(date) :
-                            taskList.findTasksOnDate(date);
+            List<Task> results = (action.equals("before")) ? taskManager.findTasksBeforeDate(date) :
+                    (action.equals("after")) ? taskManager.findTasksAfterDate(date) :
+                            taskManager.findTasksOnDate(date);
 
             if (results.isEmpty()) {
                 System.out.println("No tasks found to be done " + action + " " + words[1]);
             } else {
                 System.out.println("Tasks " + action + " " + words[1] + ":");
-                results.forEach(System.out::println);
+                for (int i = 0; i < results.size(); i++) {
+                    if (results.get(i) != null) {
+                        System.out.println("\t" + (i + 1) + "." + results.get(i));
+                    }
+                }
             }
         } catch (DateTimeParseException e) {
             throw new TaskException("Invalid date format! Use: dd/MM/yyyy (e.g., 15/10/2025).");
