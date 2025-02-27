@@ -4,16 +4,25 @@ import exception.ExitException;
 import exception.MarkException;
 import exception.TaskException;
 import storage.Storage;
+import task.Task;
+import task.TaskList;
 import task.TaskManager;
 import ui.Ui;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.List;
 
 public class CommandHandler {
     private TaskManager taskManager;
     private Storage fileStorage;
+    private TaskList taskList;
 
-    public CommandHandler(TaskManager taskManager, Storage fileStorage) throws TaskException {
+    public CommandHandler(TaskManager taskManager, Storage fileStorage, TaskList taskList) throws TaskException {
         this.taskManager = taskManager;
         this.fileStorage = fileStorage;
+        this.taskList = taskList;
     }
 
     public void processCommand(String command) throws ExitException {
@@ -28,12 +37,11 @@ public class CommandHandler {
             return;
         }
 
-        boolean isMarkCommand = (words[0].equalsIgnoreCase("mark"))
-                || (words[0].equalsIgnoreCase("unmark"));
-        boolean isTaskCommand = words[0].equalsIgnoreCase("todo")
-                || words[0].equalsIgnoreCase("deadline")
-                || words[0].equalsIgnoreCase("event");
-        boolean isDelete = words[0].equalsIgnoreCase("delete");
+        String action = words[0].toUpperCase();
+        boolean isMarkCommand = action.equals("MARK") || action.equals("UNMARK");
+        boolean isTaskCommand = action.equals("TODO") || action.equals("DEADLINE") || action.equals("EVENT");
+        boolean isDelete = action.equals("DELETE");
+        boolean isCheck = action.equals("BEFORE") || action.equals("ON") || action.equals("AFTER");
 
         if (command.equalsIgnoreCase("list")) { // Command: "list"
             printTaskList();
@@ -55,6 +63,12 @@ public class CommandHandler {
             try {
                 deleteTask(command);
                 fileStorage.saveTasks(taskManager.getTaskList());
+            } catch (TaskException e) {
+                System.out.println(e.getMessage());
+            }
+        } else if (isCheck) {
+            try {
+                checkDates(command);
             } catch (TaskException e) {
                 System.out.println(e.getMessage());
             }
@@ -144,7 +158,7 @@ public class CommandHandler {
         }
 
         String taskNum = words[1];
-        int index = 0;
+        int index;
         try { // Check if the second word can be parsed as an int
             index = Integer.parseInt(taskNum);
         } catch (NumberFormatException e) { // Input is not an integer
@@ -159,6 +173,32 @@ public class CommandHandler {
             taskManager.deleteTask(index);
         } else { // Input is less than or equal to 0
             throw new TaskException("Negative integer! Please enter a positive integer!");
+        }
+    }
+
+    // Check tasks with dates before, on, or after the requested date
+    public void checkDates(String line) throws TaskException {
+        String[] words = line.split(" ");
+        String action = words[0].toLowerCase();
+        if (words.length != 2) {
+            throw new TaskException("Invalid date format! Use: dd/MM/yyyy (e.g., 15/10/2025).");
+        }
+
+        DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        try {
+            LocalDate date = LocalDate.parse(words[1], DATE_FORMAT);
+            List<Task> results = (action.equals("before")) ? taskList.findTasksBeforeDate(date) :
+                    (action.equals("after")) ? taskList.findTasksAfterDate(date) :
+                            taskList.findTasksOnDate(date);
+
+            if (results.isEmpty()) {
+                System.out.println("No tasks found to be done " + action + " " + words[1]);
+            } else {
+                System.out.println("Tasks " + action + " " + words[1] + ":");
+                results.forEach(System.out::println);
+            }
+        } catch (DateTimeParseException e) {
+            throw new TaskException("Invalid date format! Use: dd/MM/yyyy (e.g., 15/10/2025).");
         }
     }
 }
