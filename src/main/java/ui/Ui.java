@@ -1,21 +1,30 @@
 package ui;
 
-// Class to store all ascii art
+/**
+ * The {@code Ui} class handles user interface messages
+ */
 public class Ui {
-    // Print greeting message when program is executed
+    /**
+     * Prints a greeting message when the program starts.
+     */
     public static void printGreetings() {
         System.out.println("Welcome to the Galaxy of Cw!");
         System.out.println("How may I help you?");
         printDivider();
     }
 
-    // Print goodbye message when user input "bye"
+    /**
+     * Prints a farewell message when the user exits the program.
+     */
     public static void printBye() {
         System.out.println("Goodbye! See you soon!");
         Ui.printDivider();
     }
 
-    // Handle empty input
+    /**
+     * Prints an error message when the user enters an empty command.
+     * Suggests the user type something instead of an empty input.
+     */
     public static void printEmptyInput() {
         System.out.print("""
             Hmm, I can't store invisible thoughts.
@@ -24,6 +33,9 @@ public class Ui {
         );
     }
 
+    /**
+     * Prints a visual divider line to separate messages.
+     */
     public static void printDivider() {
         String divider = "----------------------------------------------------------------------------";
         System.out.println(divider);

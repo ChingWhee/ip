@@ -5,12 +5,18 @@ import java.util.ArrayList;
 import exception.TaskException;
 import task.*;
 
+/**
+ * Handles file storage operations for tasks.
+ * This class ensures tasks are saved to and loaded from a file.
+ */
 public class Storage {
     private final String currentDir = System.getProperty("user.dir");
     private final String FILE_PATH = "/src/main/java/data/storage.txt";
     public ArrayList<Task> storageTasks = new ArrayList<>();
 
-
+    /**
+     * Constructs a Storage instance, ensuring the storage file exists and reading tasks from it.
+     */
     public Storage() {
         try {
             ensureFileExists();
@@ -20,6 +26,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Ensures that the storage file and its parent directory exist.
+     * If they do not exist, this method creates them.
+     *
+     * @throws IOException If an error occurs while creating the file or directory.
+     */
     private void ensureFileExists() throws IOException {
         System.out.println("Looking for: " + currentDir + FILE_PATH);
         File storageFile = new File(currentDir + FILE_PATH);
@@ -37,6 +49,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Reads the task storage file and loads tasks into memory.
+     * If a line is corrupted, it is skipped.
+     *
+     * @throws IOException If an error occurs while reading the file.
+     */
     private void readFile() throws IOException {
         System.out.println("Reading file now");
         BufferedReader reader = new BufferedReader(new FileReader(currentDir + FILE_PATH));
@@ -52,6 +70,12 @@ public class Storage {
         }
     }
 
+    /**
+     * Parses a line from the storage file and converts it into a task.
+     *
+     * @param line The line to parse.
+     * @throws TaskException If the line format is incorrect or contains an unknown task type.
+     */
     public void parseTask(String line) throws TaskException {
         String[] parts = line.split(" \\| ");
         if (parts.length < 3) {
@@ -82,6 +106,11 @@ public class Storage {
         }
     }
 
+    /**
+     * Saves the list of tasks to the storage file.
+     *
+     * @param tasks The list of tasks to be saved.
+     */
     public void saveTasks(ArrayList<Task> tasks) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(currentDir + FILE_PATH))) {
             for (Task task : tasks) {
@@ -93,6 +122,11 @@ public class Storage {
         }
     }
 
+    /**
+     * Loads the tasks stored in memory.
+     *
+     * @return The list of loaded tasks.
+     */
     public ArrayList<Task> loadTasks() {
         return storageTasks;
     }

@@ -4,13 +4,29 @@ import exception.TaskException;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
+/**
+ * Manages tasks in the application by adding, updating, and removing tasks.
+ * This class interacts with {@code TaskList} to modify and retrieve tasks.
+ */
 public class TaskManager {
     private TaskList taskList;
 
+    /**
+     * Constructs a TaskManager with a given TaskList.
+     *
+     * @param taskList The TaskList instance to manage tasks.
+     * @throws TaskException If an error occurs during initialization.
+     */
     public TaskManager(TaskList taskList) throws TaskException {
         this.taskList = taskList;
     }
 
+    /**
+     * Changes the completion status of a task.
+     *
+     * @param isDone Whether the task is marked as done.
+     * @param index The 1-based index of the task to update.
+     */
     public void changeTaskStatus(Boolean isDone, int index) {
         if (isDone) {
             System.out.println("Nice! I've marked this task as done:");
@@ -21,6 +37,10 @@ public class TaskManager {
         System.out.println("\t" + taskList.getTask(index - 1).toString());
     }
 
+    /**
+     * Prints all tasks in the task list.
+     * If no tasks are available, it prompts the user to add tasks.
+     */
     public void printTasks() {
         if (taskList.isEmpty()) {
             System.out.println("No tasks yet! Start adding some tasks");
@@ -34,10 +54,21 @@ public class TaskManager {
         }
     }
 
+    /**
+     * Adds a new to-do task to the task list.
+     *
+     * @param description The description of the to-do task.
+     */
     public void addTodo(String description) {
         taskList.addTask(new Todo(description));
     }
 
+    /**
+     * Adds a new Deadline task to the task list.
+     *
+     * @param task The task description including the deadline.
+     * @throws TaskException If the deadline format is invalid.
+     */
     public void addDeadline(String task) throws TaskException {
         if (!task.contains(" /by ")) {
             throw new TaskException("Invalid deadline format! Use: deadline <description> /by <dd/MM/yyyy HHmm>");
@@ -50,6 +81,12 @@ public class TaskManager {
         }
     }
 
+    /**
+     * Adds a new Event task to the task list.
+     *
+     * @param task The event description including start and end times.
+     * @throws TaskException If the event format is invalid.
+     */
     public void addEvent(String task) throws TaskException {
         int fromIndex = task.indexOf(" /from ");
         int toIndex = task.indexOf(" /to ");
@@ -79,6 +116,11 @@ public class TaskManager {
         }
     }
 
+    /**
+     * Deletes a task from the task list.
+     *
+     * @param index The 1-based index of the task to be removed.
+     */
     public void deleteTask(int index) {
         System.out.println("Alright, I have deleted this task!");
         System.out.println("\t" + taskList.getTask(index - 1).toString());
@@ -86,14 +128,29 @@ public class TaskManager {
         System.out.println("Now you have " + taskList.size() + " tasks.");
     }
 
+    /**
+     * Gets the total number of tasks in the list.
+     *
+     * @return The count of tasks in the task list.
+     */
     public int getTasksCount() {
         return taskList.size();
     }
 
+    /**
+     * Retrieves the most recently added task.
+     *
+     * @return A string representation of the latest task.
+     */
     public String getLatestTask() {
         return taskList.getLastTask().toString();
     }
 
+    /**
+     * Retrieves the full task list.
+     *
+     * @return An ArrayList containing all tasks.
+     */
     public ArrayList<Task> getTaskList() {
         return taskList.tasks;
     }
