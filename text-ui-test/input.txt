@@ -3,29 +3,26 @@ mark
 unmark
 mark aaa
 unmark aaa
-todo borrow book
-deadline return book /by Sunday
-mark 1
-mark 3
-list
-unmark 1
-unmark 3
-todo  
-todo ""  
-deadline return book  
+todo
+todo ""
+deadline return book
 deadline return book /by 5pm
-event meeting  
-event meeting /from 2pm  
-event meeting /to 4pm  
-event meeting /to 4pm /from 2pm  
-event meeting /from  /to  
-event meeting /from 6pm /to 4pm  
-event project meeting /from Mon 2pm /to 4pm
-list
-delete 3
+deadline return book /by 15/10/2025 1700
+event meeting
+event meeting /from 15/10/2025 1400
+event meeting /to 15/10/2025 1600
+event meeting /to 15/10/2025 1600 /from 15/10/2025 1400
+event meeting /from  /to
+event meeting /from 15/10/2025 1400 /to 15/10/2025 1600
+todo borrow book
+deadline return book /by 15/10/2025 1430
+event project meeting /from 15/10/2025 1400 /to 15/10/2025 1600
 delete 100
-list
 mark 3
-list
-bye
+unmark 3
 test
+list
+mark 1
+unmark 1
+delete 3
+bye

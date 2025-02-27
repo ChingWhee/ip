@@ -1,5 +1,2 @@
-T | 0 | ""
-D | 0 | return book | 15/10/2025 1700
-T | 0 | borrow book
 D | 0 | return book | 15/10/2025 1430
 E | 0 | project meeting | 15/10/2025 1400 | 15/10/2025 1600
