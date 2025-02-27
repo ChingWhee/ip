@@ -3,6 +3,9 @@ package task;
 import storage.Storage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TaskList {
     public ArrayList<Task> tasks = new ArrayList<>();
@@ -39,4 +42,15 @@ public class TaskList {
         tasks.remove(index);
     }
 
+    public List<Task> findTasksByKeywords(String keywords) {
+        // Split input into individual words and check for task with all matching keywords
+        String[] keywordList = keywords.toLowerCase().split(" ");
+
+        return tasks.stream()
+            .filter(task -> {
+                String description = task.getDescription().toLowerCase();
+                return Arrays.stream(keywordList).allMatch(description::contains);
+            })
+            .collect(Collectors.toList());
+    }
 }
