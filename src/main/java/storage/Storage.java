@@ -63,10 +63,8 @@ public class Storage {
         while ((line = reader.readLine()) != null) {
             try {
                 parseTask(line);
-            } catch (IllegalArgumentException | DateTimeParseException e) {
+            } catch (IllegalArgumentException | DateTimeParseException | TaskException e) {
                 System.out.println("Skipping corrupted line: " + line);
-            } catch (TaskException e) {
-                System.out.println(e.getMessage());
             }
         }
     }
