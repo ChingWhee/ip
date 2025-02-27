@@ -5,8 +5,8 @@ import exception.MarkException;
 import exception.TaskException;
 import storage.Storage;
 import task.Task;
-import task.TaskList;
 import task.TaskManager;
+import task.TaskList;
 import ui.Ui;
 
 import java.time.LocalDate;
@@ -41,6 +41,7 @@ public class CommandHandler {
         boolean isMarkCommand = action.equals("MARK") || action.equals("UNMARK");
         boolean isTaskCommand = action.equals("TODO") || action.equals("DEADLINE") || action.equals("EVENT");
         boolean isDelete = action.equals("DELETE");
+        boolean isFind = action.equals("FIND");
         boolean isCheck = action.equals("BEFORE") || action.equals("ON") || action.equals("AFTER");
 
         if (command.equalsIgnoreCase("list")) { // Command: "list"
@@ -63,6 +64,12 @@ public class CommandHandler {
             try {
                 deleteTask(command);
                 fileStorage.saveTasks(taskManager.getTaskList());
+            } catch (TaskException e) {
+                System.out.println(e.getMessage());
+            }
+        } else if (isFind) {
+            try {
+                findTasks(command);
             } catch (TaskException e) {
                 System.out.println(e.getMessage());
             }
@@ -126,7 +133,7 @@ public class CommandHandler {
 
     // Handle "todo", "deadline" or "event" command
     public void addTask(String line) throws TaskException {
-        // 0 is command and 1 is task
+        // words[0] is command and words[1] is task
         String[] words = line.split(" ", 2);
         if (words.length < 2) {
             throw new TaskException("Missing task name! Use: <task type> <task name>");
@@ -176,6 +183,23 @@ public class CommandHandler {
         }
     }
 
+    // Find tasks
+    public void findTasks(String line) throws TaskException {
+        String[] words = line.split(" ", 2);
+        if (words.length != 2) {
+            throw new TaskException("Invalid find command! Use: find <keywords>");
+        }
+
+        List<Task> results = taskList.findTasksByKeywords(words[1]);
+        if (results.isEmpty()) {
+            System.out.println("There are no matching tasks with the keyword " + "\"" + words[1] + "\"");
+        } else {
+            System.out.println("Here are the matching tasks in your list:");
+            for (int i = 0; i < taskList.size(); i++) {
+                if (taskList.getTask(i) != null) {
+                    System.out.println("\t" + (i + 1) + "." + taskList.getTask(i));
+                }
+            }
     // Check tasks with dates before, on, or after the requested date
     public void checkDates(String line) throws TaskException {
         String[] words = line.split(" ");
