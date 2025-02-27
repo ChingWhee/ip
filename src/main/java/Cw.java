@@ -14,7 +14,6 @@ import task.TaskManager;
  * It also provides the main event loop to process user commands.
  */
 public class Cw {
-    private static TaskManager taskManager;
     private static CommandHandler commandHandler;
 
     /**
@@ -26,13 +25,13 @@ public class Cw {
     public static void main(String[] args) {
         Ui.printGreetings();
 
-        // Read existing files from storage file
+        // Read existing tasks from storage file
         Storage fileStorage = new Storage();
         TaskList taskList = new TaskList();
         taskList.load(fileStorage);
 
         try {
-            taskManager = new TaskManager(taskList);
+            TaskManager taskManager = new TaskManager(taskList);
             commandHandler = new CommandHandler(taskManager, fileStorage);
         } catch (TaskException e) {
             System.out.println("Cannot create task list!");

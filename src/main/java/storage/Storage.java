@@ -1,6 +1,7 @@
 package storage;
 
 import java.io.*;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import exception.TaskException;
 import task.*;
@@ -11,11 +12,11 @@ import task.*;
  */
 public class Storage {
     private final String currentDir = System.getProperty("user.dir");
-    private final String FILE_PATH = "/src/main/java/data/storage.txt";
+    private final String FILE_PATH = "/storage.txt";
     public ArrayList<Task> storageTasks = new ArrayList<>();
 
     /**
-     * Constructs a Storage instance, ensuring the storage file exists and reading tasks from it.
+     * Constructs a Storage instance, ensuring the storage file exists and read tasks from it.
      */
     public Storage() {
         try {
@@ -62,7 +63,7 @@ public class Storage {
         while ((line = reader.readLine()) != null) {
             try {
                 parseTask(line);
-            } catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException | DateTimeParseException e) {
                 System.out.println("Skipping corrupted line: " + line);
             } catch (TaskException e) {
                 System.out.println(e.getMessage());

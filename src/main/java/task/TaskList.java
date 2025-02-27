@@ -15,7 +15,7 @@ public class TaskList {
     public ArrayList<Task> tasks = new ArrayList<>();
 
     /**
-     * Loads tasks from storage and replaces the current task list.
+     * Loads existing task from storage
      *
      * @param storage The storage instance that loads tasks from a file.
      */
