@@ -1,40 +1,76 @@
 package io;
 
+import exception.ExitException;
 import exception.MarkException;
 import exception.TaskException;
+import storage.Storage;
 import task.TaskManager;
-import art.Art;
+import ui.Ui;
 
 public class CommandHandler {
-    // Print greeting message when program is executed
-    public static void printGreetings(String name) {
-        System.out.println("Welcome to the Galaxy of " + name + "!");
-//        Art.printGalaxy();
-        System.out.println("How may I help you?");
-        Art.printDivider();
+    private TaskManager taskManager;
+    private Storage fileStorage;
+
+    public CommandHandler(TaskManager taskManager, Storage fileStorage) throws TaskException {
+        this.taskManager = taskManager;
+        this.fileStorage = fileStorage;
     }
 
-    // Print goodbye message when user input "bye"
-    public static void printBye() {
-        System.out.println("Goodbye! See you soon!");
-        Art.printDivider();
-    }
+    public void processCommand(String command) throws ExitException {
+        String[] words = command.split(" ");
+        Ui.printDivider();
 
-    // Handle empty input
-    public static void printEmptyInput() {
-        System.out.print("""
-            Hmm, I can't store invisible thoughts.
-            Try typing something!
-            """
-        );
+        // Guard clauses
+        if (command.equalsIgnoreCase("bye")) {
+            throw new ExitException();
+        } else if (command.isBlank()) {
+            Ui.printEmptyInput();
+            return;
+        }
+
+        boolean isMarkCommand = (words[0].equalsIgnoreCase("mark"))
+                || (words[0].equalsIgnoreCase("unmark"));
+        boolean isTaskCommand = words[0].equalsIgnoreCase("todo")
+                || words[0].equalsIgnoreCase("deadline")
+                || words[0].equalsIgnoreCase("event");
+        boolean isDelete = words[0].equalsIgnoreCase("delete");
+
+        if (command.equalsIgnoreCase("list")) { // Command: "list"
+            printTaskList();
+        } else if (isMarkCommand) { // Command: "mark <int>" or "unmark <int>"
+            try {
+                changeStatus(command);
+                fileStorage.saveTasks(taskManager.getTaskList());
+            } catch (MarkException e) {
+                System.out.println(e.getMessage());
+            }
+        } else if (isTaskCommand) { // Command: "todo" or "deadline" or "event"
+            try {
+                addTask(command);
+                fileStorage.saveTasks(taskManager.getTaskList());
+            } catch (TaskException e) {
+                System.out.println(e.getMessage());
+            }
+        } else if (isDelete) {
+            try {
+                deleteTask(command);
+                fileStorage.saveTasks(taskManager.getTaskList());
+            } catch (TaskException e) {
+                System.out.println(e.getMessage());
+            }
+        } else {
+            System.out.println("Sorry, I don't understand what this means");
+        }
+
+        Ui.printDivider();
     }
 
     // Handle "list" command
-    public static void printTaskList() {
-        TaskManager.printTasks();
+    public void printTaskList() {
+        taskManager.printTasks();
     }
 
-    private static void throwInvalidMarkCommand(String markStatus) throws MarkException {
+    private void throwInvalidMarkCommand(String markStatus) throws MarkException {
         switch (markStatus) {
         case "MARK":
             throw new MarkException("Invalid mark command! Use: mark <int>");
@@ -43,7 +79,7 @@ public class CommandHandler {
         }
     }
     // Handle "mark" or "unmark" command
-    public static void changeStatus(String line) throws MarkException {
+    public void changeStatus(String line) throws MarkException {
         String[] words = line.split(" ");
         String markStatus = words[0].toUpperCase();
 
@@ -60,14 +96,14 @@ public class CommandHandler {
             throwInvalidMarkCommand(markStatus);
         }
          // Try to parse the string into an integer
-        int tasksCount = TaskManager.getTasksCount();
+        int tasksCount = taskManager.getTasksCount();
         if (index > tasksCount) { // Check if index is more than index of tasks
             throw new MarkException("You currently only have " + tasksCount + " tasks.");
         } else if (index > 0) {
             if (markStatus.equalsIgnoreCase("mark")) { // Mark as done
-                TaskManager.changeTaskStatus(true, index);
+                taskManager.changeTaskStatus(true, index);
             } else if (markStatus.equalsIgnoreCase("unmark")) { // Mark as not done
-                TaskManager.changeTaskStatus(false, index);
+                taskManager.changeTaskStatus(false, index);
             }
         } else { // Input is less than or equal to 0
             throw new MarkException("Negative integer! Please enter a positive integer!");
@@ -75,7 +111,7 @@ public class CommandHandler {
     }
 
     // Handle "todo", "deadline" or "event" command
-    public static void addTask(String line) throws TaskException {
+    public void addTask(String line) throws TaskException {
         // 0 is command and 1 is task
         String[] words = line.split(" ", 2);
         if (words.length < 2) {
@@ -85,23 +121,23 @@ public class CommandHandler {
         String command = words[0].toUpperCase();
         switch (command) {
         case "TODO":
-            TaskManager.addTodo(words[1]);
+            taskManager.addTodo(words[1]);
             break;
         case "DEADLINE":
-            TaskManager.addDeadline(words[1]);
+            taskManager.addDeadline(words[1]);
             break;
         case "EVENT":
-            TaskManager.addEvent(words[1]);
+            taskManager.addEvent(words[1]);
             break;
         }
 
         System.out.println("Got it, I have added this task:");
-        System.out.println("\t" +  TaskManager.getLatestTask());
-        System.out.println("Now you have " + TaskManager.getTasksCount() + " tasks.");
+        System.out.println("\t" +  taskManager.getLatestTask());
+        System.out.println("Now you have " + taskManager.getTasksCount() + " tasks.");
     }
 
     // Delete tasks
-    public static void deleteTask(String line) throws TaskException {
+    public void deleteTask(String line) throws TaskException {
         String[] words = line.split(" ");
         if (words.length != 2) {
             throw new TaskException("Invalid delete command! Use: delete <int>");
@@ -116,11 +152,11 @@ public class CommandHandler {
         }
 
         // Try to parse the string into an integer
-        int tasksCount = TaskManager.getTasksCount();
+        int tasksCount = taskManager.getTasksCount();
         if (index > tasksCount) { // Check if index is more than index of tasks
             throw new TaskException("You currently only have " + tasksCount + " tasks.");
         } else if (index > 0) {
-            TaskManager.deleteTask(index);
+            taskManager.deleteTask(index);
         } else { // Input is less than or equal to 0
             throw new TaskException("Negative integer! Please enter a positive integer!");
         }

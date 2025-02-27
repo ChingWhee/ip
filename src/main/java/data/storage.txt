@@ -1,4 +1,0 @@
-T | 0 | aaa
-T | 0 | adoia
-E | 0 | aaa | bbb | ccc
-T | 0 | aaa
