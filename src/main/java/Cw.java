@@ -33,7 +33,7 @@ public class Cw {
 
         try {
             taskManager = new TaskManager(taskList);
-            commandHandler = new CommandHandler(taskManager, fileStorage);
+            commandHandler = new CommandHandler(taskManager, fileStorage, taskList);
         } catch (TaskException e) {
             System.out.println("Cannot create task list!");
             return;

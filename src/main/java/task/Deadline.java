@@ -1,10 +1,14 @@
 package task;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * A task with a deadline.
  */
 public class Deadline extends Task {
-    protected String by;
+    protected LocalDateTime by;
+    private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("dd/MM/yyyy HHmm");
+    private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("dd MMM yyyy, HHmm");
 
     /**
      * Constructs a Deadline task with a description and a due date.
@@ -14,7 +18,7 @@ public class Deadline extends Task {
      */
     public Deadline(String description, String by) {
         super(description);
-        this.by = by;
+        this.by = LocalDateTime.parse(by, INPUT_FORMAT);
     }
 
     /**
@@ -26,7 +30,7 @@ public class Deadline extends Task {
      */
     public Deadline(String description, Boolean isDone, String by) {
         super(description, isDone);
-        this.by = by;
+        this.by = LocalDateTime.parse(by, INPUT_FORMAT);
     }
 
     /**
@@ -36,7 +40,7 @@ public class Deadline extends Task {
      */
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + by + ")";
+        return "[D]" + super.toString() + " (by: " + by.format(OUTPUT_FORMAT) + ")";
     }
 
     /**
@@ -45,6 +49,6 @@ public class Deadline extends Task {
      * @return The Deadline task in a formatted string representation.
      */
     public String toFileString() {
-        return "D | " + (isDone ? "1" : "0") + " | " + description + " | " + by;
+        return "D | " + (isDone ? "1" : "0") + " | " + description + " | " + by.format(INPUT_FORMAT);
     }
 }
