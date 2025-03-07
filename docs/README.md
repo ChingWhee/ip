@@ -19,6 +19,7 @@ You can interact with it through **simple commands**.
 | **Mark Task**    | `mark <task index>`                                                      | `mark 1`                                                          |
 | **Unmark Task**  | `unmark <task index>`                                                    | `unmark 1`                                                        |
 | **Exit program** | `bye`                                                                    | `bye`                                                             |
+
 ---
 
 ### 1.2 Searching & Filtering
