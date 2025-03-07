@@ -1,0 +1,22 @@
+list
+deadline return book /by 15/10/2025 1700
+event meeting /from 15/10/2025 1400 /to 15/10/2025 1600
+todo borrow book
+event project meeting /from 15/10/2025 1400 /to 15/10/2025 1600
+deadline return book /by 16/10/2025 1430
+deadline study math /by 17/10/2025 1430
+deadline study english /by 18/10/2025 1430
+deadline study science /by 19/10/2025 1430
+deadline study history /by 20/10/2025 1430
+list
+on 15/10/2025
+before 16/10/2025
+after 16/10/2025
+before 01/01/2000
+mark 3
+list
+unmark 3
+list
+delete 3
+list
+bye

@@ -1,9 +1,7 @@
 Welcome to the Galaxy of Cw!
 How may I help you?
 ----------------------------------------------------------------------------
-Looking for: C:\Users\cw\others\NUS\Course_notes\Year 2 Sem 2\CS2113\projects\ip\text-ui-test/storage.txt
 File storage.txt created
-Reading file now
 ----------------------------------------------------------------------------
 No tasks yet! Start adding some tasks
 ----------------------------------------------------------------------------

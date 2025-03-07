@@ -34,7 +34,7 @@ public class Storage {
      * @throws IOException If an error occurs while creating the file or directory.
      */
     private void ensureFileExists() throws IOException {
-        System.out.println("Looking for: " + currentDir + FILE_PATH);
+//        System.out.println("Looking for: " + currentDir + FILE_PATH);
         File storageFile = new File(currentDir + FILE_PATH);
         File directory = storageFile.getParentFile();
 
@@ -57,7 +57,7 @@ public class Storage {
      * @throws IOException If an error occurs while reading the file.
      */
     private void readFile() throws IOException {
-        System.out.println("Reading file now");
+//        System.out.println("Reading file now");
         BufferedReader reader = new BufferedReader(new FileReader(currentDir + FILE_PATH));
         String line;
         while ((line = reader.readLine()) != null) {
