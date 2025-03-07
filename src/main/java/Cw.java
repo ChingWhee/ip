@@ -16,17 +16,10 @@ import task.TaskManager;
 public class Cw {
     private static CommandHandler commandHandler;
 
-    /**
-     * The main method that starts the application.
-     * It initializes UI, loads existing tasks from storage, and sets up command handling.
-     *
-     * @param args Command-line arguments (not used in this program).
-     */
-    public static void main(String[] args) {
+    public Cw(String filePath) {
         Ui.printGreetings();
-
         // Read existing tasks from storage file
-        Storage fileStorage = new Storage();
+        Storage fileStorage = new Storage(filePath);
         TaskList taskList = new TaskList();
         taskList.load(fileStorage);
 
@@ -34,19 +27,15 @@ public class Cw {
             TaskManager taskManager = new TaskManager(taskList);
             commandHandler = new CommandHandler(taskManager, fileStorage);
         } catch (TaskException e) {
-            System.out.println("Cannot create task list!");
-            return;
+            Ui.printTaskListError();
         }
-
-        // Start reading from command line
-        run();
     }
 
     /**
      * Runs the command loop, continuously reading and executing code according to command line input
      * The loop continues until the user enters an exit command or type "bye"
      */
-    private static void run() {
+    public void run() {
         Scanner in = new Scanner(System.in);
         while (true) {
             try {
@@ -56,5 +45,15 @@ public class Cw {
                 return;
             }
         }
+    }
+
+    /**
+     * The main method that starts the application.
+     * It initializes UI, loads existing tasks from storage, and sets up command handling.
+     *
+     * @param args Command-line arguments (not used in this program).
+     */
+    public static void main(String[] args) {
+        new Cw("/storage.txt").run();
     }
 }

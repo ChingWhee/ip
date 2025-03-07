@@ -12,13 +12,14 @@ import task.*;
  */
 public class Storage {
     private final String currentDir = System.getProperty("user.dir");
-    private final String FILE_PATH = "/storage.txt";
+    private final String filePath;
     public ArrayList<Task> storageTasks = new ArrayList<>();
 
     /**
      * Constructs a Storage instance, ensuring the storage file exists and read tasks from it.
      */
-    public Storage() {
+    public Storage(String filePath) {
+        this.filePath = filePath;
         try {
             ensureFileExists();
             readFile();
@@ -34,8 +35,7 @@ public class Storage {
      * @throws IOException If an error occurs while creating the file or directory.
      */
     private void ensureFileExists() throws IOException {
-//        System.out.println("Looking for: " + currentDir + FILE_PATH);
-        File storageFile = new File(currentDir + FILE_PATH);
+        File storageFile = new File(currentDir + filePath);
         File directory = storageFile.getParentFile();
 
         if (storageFile.exists()) { return; }
@@ -58,7 +58,7 @@ public class Storage {
      */
     private void readFile() throws IOException {
 //        System.out.println("Reading file now");
-        BufferedReader reader = new BufferedReader(new FileReader(currentDir + FILE_PATH));
+        BufferedReader reader = new BufferedReader(new FileReader(currentDir + filePath));
         String line;
         while ((line = reader.readLine()) != null) {
             try {
@@ -111,7 +111,7 @@ public class Storage {
      * @param tasks The list of tasks to be saved.
      */
     public void saveTasks(ArrayList<Task> tasks) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(currentDir + FILE_PATH))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(currentDir + filePath))) {
             for (Task task : tasks) {
                 writer.write(task.toFileString());
                 writer.newLine();
