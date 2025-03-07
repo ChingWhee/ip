@@ -8,6 +8,7 @@ The chatbot supports **task management commands** such as **adding, deleting, ma
 You can interact with it through **simple commands**.
 
 ### 1.1 Task Management
+
 | **Command**      | **Format**                                                               | **Example**                                                       |
 |------------------|--------------------------------------------------------------------------|-------------------------------------------------------------------|
 | **Add To-Do**    | `todo <task description>`                                                | `todo Buy groceries`                                              |
@@ -21,6 +22,7 @@ You can interact with it through **simple commands**.
 ---
 
 ### 1.2 Searching & Filtering
+
 | **Command**      | **Format**                                    | **Example**                                         |
 |------------------|---------------------------------------------|-----------------------------------------------------|
 | **Find Tasks**   | `find <keywords>`                           | `find groceries`                                   |
