@@ -71,23 +71,13 @@ public class Ui {
      */
     public static void printTaskList(TaskList taskList) {
         if (taskList.isEmpty()) {
-            System.out.println("No tasks yet! Start adding some tasks.");
+            System.out.println("No tasks yet! Start adding some tasks");
             return;
         }
         System.out.println("Here are the tasks in your list:");
         for (int i = 0; i < taskList.size(); i++) {
-            System.out.println((i + 1) + ". " + taskList.getTask(i));
+            System.out.println((i + 1) + "." + taskList.getTask(i));
         }
-    }
-
-    /**
-     * Prints the latest task added.
-     *
-     * @param task The most recently added task.
-     */
-    public static void printLatestTask(Task task) {
-        System.out.println("Got it, I have added this task:");
-        System.out.println("\t" + task);
     }
 
     /**
@@ -99,6 +89,19 @@ public class Ui {
      */
     public static void printLatestTask(TaskList taskList, int index) {
         System.out.println("\t" + taskList.getTask(index - 1));
+    }
+
+    /**
+     * Prints a message indicating that a new task has been added to the task list.
+     * Displays the task details and the updated number of remaining tasks.
+     *
+     * @param task The newly added task.
+     * @param remainingTasks The total number of tasks after adding the new task.
+     */
+    public static void printNewTask(Task task, int remainingTasks) {
+        System.out.println("Got it, I have added this task:");
+        System.out.println("\t" + task);
+        System.out.println("Now you have " + remainingTasks + " tasks.");
     }
 
     /**
@@ -127,15 +130,15 @@ public class Ui {
      *
      * @param taskList The list of matching tasks.
      */
-    public static void printMatchingTasks(TaskList taskList) {
+    public static void printMatchingTasks(TaskList taskList, String keyword) {
         if (taskList.isEmpty()) {
-            System.out.println("No matching tasks found.");
+            System.out.println("There are no matching tasks with the keyword " + "\"" + keyword + "\"");
             return;
         }
 
         System.out.println("Here are the matching tasks in your list:");
         for (int i = 0; i < taskList.size(); i++) {
-            System.out.println("\t" + (i + 1) + ". " + taskList.getTask(i));
+            System.out.println("\t" + (i + 1) + "." + taskList.getTask(i));
         }
     }
 
@@ -153,7 +156,7 @@ public class Ui {
 
         System.out.println("Tasks " + dateDescription + ":");
         for (int i = 0; i < taskList.size(); i++) {
-            System.out.println("\t" + (i + 1) + ". " + taskList.getTask(i));
+            System.out.println("\t" + (i + 1) + "." + taskList.getTask(i));
         }
     }
 }

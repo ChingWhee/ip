@@ -32,10 +32,6 @@ public class TaskManager {
      * @param index The 1-based index of the task to update.
      */
     public void changeTaskStatus(Boolean isDone, int index) {
-        if (index < 1 || index > taskList.size()) {
-            Ui.printTaskListError();
-            return;
-        }
         if (isDone) {
             Ui.printMarkAsDone();
         } else {
@@ -60,7 +56,7 @@ public class TaskManager {
     public void addTodo(String description) {
         Task task = new Todo(description);
         taskList.addTask(task);
-        Ui.printLatestTask(task);
+        Ui.printNewTask(task, taskList.size());
     }
 
     /**
@@ -77,7 +73,7 @@ public class TaskManager {
         try {
             Task newTask = new Deadline(deadlineParts[0], deadlineParts[1]);
             taskList.addTask(newTask);
-            Ui.printLatestTask(newTask);
+            Ui.printNewTask(newTask, taskList.size());
         } catch (DateTimeParseException e) {
             throw new TaskException("Invalid date format! Use: dd/MM/yyyy HHmm (e.g., 15/10/2025 1430).");
         }
@@ -110,6 +106,7 @@ public class TaskManager {
         try {
             Task newEvent = new Event(eventParts[0], eventParts[1], eventParts[2]);
             taskList.addTask(newEvent);
+            Ui.printNewTask(newEvent, taskList.size());
         } catch (DateTimeParseException e) {
             throw new TaskException("Invalid date format! Use: dd/MM/yyyy HHmm (e.g., 15/10/2025 1430).");
         }
@@ -120,11 +117,7 @@ public class TaskManager {
      *
      * @param index The 1-based index of the task to be removed.
      */
-    public void deleteTask(int index) {
-        if (index < 1 || index > taskList.size()) {
-            Ui.printTaskListError();
-            return;
-        }
+    public void deleteTask(int index)  {
         Task task = taskList.getTask(index - 1);
         taskList.removeTask(index - 1);
         Ui.printDeletedTask(task, taskList.size());

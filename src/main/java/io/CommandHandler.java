@@ -59,41 +59,18 @@ public class CommandHandler {
         boolean isFind = action.equals("FIND");
         boolean isCheck = action.equals("BEFORE") || action.equals("ON") || action.equals("AFTER");
 
-        if (command.equalsIgnoreCase("list")) { // Command: "list"
+        if (command.equalsIgnoreCase("list")) {
             printTaskList();
-        } else if (isMarkCommand) { // Command: "mark <int>" or "unmark <int>"
-            try {
-                changeStatus(command);
-                fileStorage.saveTasks(taskManager.getTaskList());
-            } catch (MarkException e) {
-                System.out.println(e.getMessage());
-            }
-        } else if (isTaskCommand) { // Command: "todo" or "deadline" or "event"
-            try {
-                addTask(command);
-                fileStorage.saveTasks(taskManager.getTaskList());
-            } catch (TaskException e) {
-                System.out.println(e.getMessage());
-            }
+        } else if (isMarkCommand) {
+            handleMarkCommand(command);
+        } else if (isTaskCommand) {
+            handleTaskCommand(command);
         } else if (isDelete) {
-            try {
-                deleteTask(command);
-                fileStorage.saveTasks(taskManager.getTaskList());
-            } catch (TaskException e) {
-                System.out.println(e.getMessage());
-            }
+            handleDeleteCommand(command);
         } else if (isFind) {
-            try {
-                findTasks(command);
-            } catch (TaskException e) {
-                System.out.println(e.getMessage());
-            }
+            handleFindCommand(command);
         } else if (isCheck) {
-            try {
-                checkDates(command);
-            } catch (TaskException e) {
-                System.out.println(e.getMessage());
-            }
+            handleCheckDateCommand(command);
         } else {
             System.out.println("Sorry, I don't understand what this means");
         }
@@ -106,6 +83,74 @@ public class CommandHandler {
      */
     public void printTaskList() {
         taskManager.printTasks();
+    }
+
+    /**
+     * Handles the "mark" or "unmark" command.
+     *
+     * @param command The user input command.
+     */
+    private void handleMarkCommand(String command) {
+        try {
+            changeStatus(command);
+            fileStorage.saveTasks(taskManager.getTaskList());
+        } catch (MarkException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Handles the addition of tasks.
+     *
+     * @param command The user input command.
+     */
+    private void handleTaskCommand(String command) {
+        try {
+            addTask(command);
+            fileStorage.saveTasks(taskManager.getTaskList());
+        } catch (TaskException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Handles the deletion of tasks.
+     *
+     * @param command The user input command.
+     */
+    private void handleDeleteCommand(String command) {
+        try {
+            deleteTask(command);
+            fileStorage.saveTasks(taskManager.getTaskList());
+        } catch (TaskException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Handles finding tasks.
+     *
+     * @param command The user input command.
+     */
+    private void handleFindCommand(String command) {
+        try {
+            findTasks(command);
+        } catch (TaskException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /**
+     * Handles checking tasks before, after, or on a specific date.
+     *
+     * @param command The user input command.
+     */
+    private void handleCheckDateCommand(String command) {
+        try {
+            checkDates(command);
+        } catch (TaskException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /**
@@ -138,18 +183,16 @@ public class CommandHandler {
             throwInvalidMarkCommand(markStatus);
         }
 
-        int index;
+        int index = 0;
         try {
             index = Integer.parseInt(words[1]);
         } catch (NumberFormatException e) {
-            throw new MarkException("Invalid task number! Use: mark <int> or unmark <int>");
+            throwInvalidMarkCommand(markStatus);
         }
 
         int tasksCount = taskManager.getTasksCount();
         if (index > tasksCount) {
             throw new MarkException("You currently only have " + tasksCount + " tasks.");
-                taskManager.changeTaskStatus(false, index);
-            }
         } else if (index < 1) { // Input is less than or equal to 0
             throw new MarkException("Value less than 1! Please enter a positive integer!");
         }
@@ -202,6 +245,13 @@ public class CommandHandler {
             throw new TaskException("Invalid task number! Use: delete <int>");
         }
 
+        int tasksCount = taskManager.getTasksCount();
+        if (index > tasksCount) {
+            throw new TaskException("You currently only have " + tasksCount + " tasks.");
+        } else if (index < 1) { // Input is less than or equal to 0
+            throw new TaskException("Value less than 1! Please enter a positive integer!");
+        }
+
         taskManager.deleteTask(index);
     }
 
@@ -222,7 +272,7 @@ public class CommandHandler {
         for (Task task : results) {
             matchingTasks.addTask(task);
         }
-        Ui.printMatchingTasks(matchingTasks);
+        Ui.printMatchingTasks(matchingTasks, words[1]);
     }
 
     /**
