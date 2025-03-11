@@ -1,8 +1,12 @@
 list
+todo finish assignment
+todo finish lab report
 deadline return book /by 15/10/2025 1700
+deadline clean room /by 16/10/2025 1800
 event meeting /from 15/10/2025 1400 /to 15/10/2025 1600
+event project meeting /from 16/10/2025 1400 /to 16/10/2025 1600
+list
 todo borrow book
-event project meeting /from 15/10/2025 1400 /to 15/10/2025 1600
 deadline return book /by 16/10/2025 1430
 deadline study math /by 17/10/2025 1430
 deadline study english /by 18/10/2025 1430
@@ -15,8 +19,9 @@ after 16/10/2025
 before 01/01/2000
 mark 3
 list
-unmark 3
-list
+mark 2
 delete 3
+list
+unmark 2
 list
 bye

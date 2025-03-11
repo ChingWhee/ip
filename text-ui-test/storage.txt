@@ -1,0 +1,11 @@
+T | 0 | finish assignment
+T | 0 | finish lab report
+D | 0 | clean room | 16/10/2025 1800
+E | 0 | meeting | 15/10/2025 1400 | 15/10/2025 1600
+E | 0 | project meeting | 16/10/2025 1400 | 16/10/2025 1600
+T | 0 | borrow book
+D | 0 | return book | 16/10/2025 1430
+D | 0 | study math | 17/10/2025 1430
+D | 0 | study english | 18/10/2025 1430
+D | 0 | study science | 19/10/2025 1430
+D | 0 | study history | 20/10/2025 1430
