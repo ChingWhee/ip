@@ -53,26 +53,39 @@ public class CommandHandler {
         }
 
         String action = words[0].toUpperCase();
-        boolean isMarkCommand = action.equals("MARK") || action.equals("UNMARK");
-        boolean isTaskCommand = action.equals("TODO") || action.equals("DEADLINE") || action.equals("EVENT");
-        boolean isDelete = action.equals("DELETE");
-        boolean isFind = action.equals("FIND");
-        boolean isCheck = action.equals("BEFORE") || action.equals("ON") || action.equals("AFTER");
 
-        if (command.equalsIgnoreCase("list")) {
+        switch (action) {
+        case "LIST":
             printTaskList();
-        } else if (isMarkCommand) {
+            break;
+
+        case "MARK":
+        case "UNMARK":
             handleMarkCommand(command);
-        } else if (isTaskCommand) {
+            break;
+
+        case "TODO":
+        case "DEADLINE":
+        case "EVENT":
             handleTaskCommand(command);
-        } else if (isDelete) {
+            break;
+
+        case "DELETE":
             handleDeleteCommand(command);
-        } else if (isFind) {
+            break;
+
+        case "FIND":
             handleFindCommand(command);
-        } else if (isCheck) {
+            break;
+
+        case "BEFORE":
+        case "ON":
+        case "AFTER":
             handleCheckDateCommand(command);
-        } else {
-            System.out.println("Sorry, I don't understand what this means");
+            break;
+
+        default:
+            System.out.println("Sorry, I don't understand what this means.");
         }
 
         Ui.printDivider();
